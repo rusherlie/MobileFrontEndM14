@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:todosapp/Provider/todosprovider.dart';
 
@@ -19,7 +20,100 @@ class _ProfilePageState extends State<ProfilePage> {
       children: [
         Card(
           child: ListTile(
-            leading: const Icon(Icons.person),
+                leading: InkWell(
+                  child: context.watch<TodoProvider>().getGambar == null ?
+                    CircleAvatar(
+                      backgroundColor: Colors.grey,
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.white,
+                      ),
+                    )
+                      :
+                    CircleAvatar(
+                      backgroundImage: context.watch<TodoProvider>().getGambar,
+                    ),
+                  onTap: (){
+                    getFromGallery() async {
+                      XFile? pickedFile = await ImagePicker().pickImage(
+                        source: ImageSource.gallery,
+                      );
+                      if(pickedFile != null){
+                        final bytes = await pickedFile.readAsBytes();
+                        setState(() {
+                          context.read<TodoProvider>().setGambar = MemoryImage(bytes);
+                        });
+                      }
+                    }
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context){
+                        return Dialog(
+                          insetPadding: EdgeInsets.all(100),
+                          child: Container(
+                            height: 300,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    color: context.watch<TodoProvider>().isDark ? Color(0xff1e1e1e) : Colors.white,
+                                    width: double.infinity,
+                                    child: context.watch<TodoProvider>().getGambar == null ?
+                                      CircleAvatar(
+                                        backgroundColor: Colors.grey,
+                                        child: Icon(
+                                          Icons.person,
+                                          color: Colors.white,
+                                          size: 200,
+                                        ),
+                                      )
+                                        :
+                                      Expanded(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: context.watch<TodoProvider>().getGambar!,
+                                              fit: BoxFit.cover,
+                                            )
+                                          ),
+                                        ),
+                                      )
+                                  ),
+                                ),
+                                Container(
+                                  color: Colors.blue,
+                                  height: 50,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    children: [
+                                      IconButton(
+                                        onPressed: (){
+                                          setState(() {
+                                            context.read<TodoProvider>().setGambar = null;
+                                          });
+                                        },
+                                        icon: Icon(Icons.delete, color: Colors.white)
+                                      ),
+                                      IconButton(
+                                        onPressed: (){
+                                          setState(() {
+                                            getFromGallery();
+                                          });
+                                        },
+                                        icon: Icon(Icons.edit, color: Colors.white)
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                    );
+                  },
+                ),
             title: const Text(
               "Hendry Linata",
               style: TextStyle(fontWeight: FontWeight.w500),

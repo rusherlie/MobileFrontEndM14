@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todosapp/Provider/todosprovider.dart';
 import 'package:todosapp/darkmode.dart';
 import 'package:todosapp/mainpage.dart';
+import 'package:todosapp/splashscreen.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: themeProvider.darkTheme == true
           ? themeProvider.dark
           : themeProvider.light,
-      home: const MainPage(),
+      home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

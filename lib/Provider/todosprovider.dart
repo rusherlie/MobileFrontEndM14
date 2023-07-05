@@ -39,6 +39,11 @@ class TodoProvider with ChangeNotifier {
   List<Todo> _filteredTodos = [];
   final List<Event> _eventList = [];
   String? value;
+  ImageProvider? gambar;
+
+  bool isDark = false;
+  get getIsDark => isDark;
+  get getGambar => gambar;
 
   final List<Stuff> _stuff = [
     Stuff('Work', Colors.red),
@@ -54,6 +59,11 @@ class TodoProvider with ChangeNotifier {
       _filteredTodos.where((check) => check.isChecked).toList();
   List<Todo> get unfinishedTodos =>
       _filteredTodos.where((check) => !check.isChecked).toList();
+      
+    set setGambar(val){
+    gambar = val;
+    notifyListeners();
+  }
 
   void addTodo(String title, String description, String startDate,
       String endDate, String category) {
